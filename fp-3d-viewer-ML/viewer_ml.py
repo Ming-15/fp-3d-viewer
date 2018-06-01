@@ -5,15 +5,13 @@ this program allows you to travel in a 3D floor-plan model
 you can move use key w(a,s,d)
 change view with key arrow up(down, right, left)
 you can raise up your vision using key h and down with key j
-to move your vision quickly using key v while key c on the contrary
+to move your vision quickly using key v while THE key c on the contrary
 '''
-from math import pi, sin, cos
-from panda3d.core import *
 from direct.showbase.ShowBase import ShowBase
 from direct.task import Task
 from floorplan import Floorplan
 import numpy as np
-import copy
+
 
 
 class Viewer(ShowBase):
@@ -23,11 +21,6 @@ class Viewer(ShowBase):
 
         base.setBackgroundColor(0, 0, 0)
         self.angle = 0.0
-        lens = PerspectiveLens()
-        lens.setFov(60)
-        lens.setNear(0.01)
-        lens.setFar(100000)
-        base.cam.node().setLens(lens)
         floorplan = Floorplan('test/floorplan')
         floorplan.read()
         self.scene = floorplan.generateEggModel()
@@ -36,7 +29,7 @@ class Viewer(ShowBase):
         self.scene.setTwoSided(True)
 
         # data for zml
-        self.date_zml = {'ca_pos':[33, 35, 8] ,'target':[0,0,8] , 'topDownH': 0}
+        self.date_zml = {'ca_pos':[0, 0, 0] ,'target':[0,0,0] , 'topDownH': 0}
 
         self.cameraPos = self.date_zml['ca_pos']
         self.target = self.date_zml['target']
@@ -44,8 +37,6 @@ class Viewer(ShowBase):
         self.movementStep = 0.01
         self.rotationStep = 0.02
 
-        # self.accept('space', self.openDoor)
-        # self.accept('enter', self.startChangingView)
 
         self.taskMgr.add(self.spinCameraTask, "SpinCameraTask")
     def spinCameraTask(self, task):
@@ -54,22 +45,20 @@ class Viewer(ShowBase):
 
             self.cameraPos[2] += 1
             self.target[2] += 1
-            print self.cameraPos[2]
+
             pass
         if base.mouseWatcherNode.is_button_down('j'):
 
             self.cameraPos[2] -= 1
             self.target[2] -= 1
-            print self.cameraPos[2]
+
             pass
         if base.mouseWatcherNode.is_button_down('v'):
 
             self.movementStep += 0.01
-            print movementStep
             pass
         if base.mouseWatcherNode.is_button_down('c'):
             self.movementStep -= 0.01
-            print movementStep
             pass
         if base.mouseWatcherNode.is_button_down('w'):
             for c in range(2):
